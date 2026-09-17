@@ -8,10 +8,13 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.11" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Aplicacao\GeradorDeCertificados.Aplicacao.csproj" />
+    <ProjectReference Include="..\Infraestrutura\GeradorDeCertificados.Infraestrutura.csproj" />
+    
   </ItemGroup>
 
 </Project>
