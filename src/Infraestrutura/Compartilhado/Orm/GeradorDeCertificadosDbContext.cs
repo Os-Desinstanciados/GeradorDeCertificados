@@ -1,3 +1,5 @@
+// using GeradorDeCertificados.Dominio.Modulos.Certificados;
+// using GeradorDeCertificados.Dominio.Modulos.Cursos;
 using GeradorDeCertificados.Dominio.Compartilhado.Auth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -10,9 +12,8 @@ public sealed class GeradorDeCertificadosDbContext(
     IProvedorDeUsuario? provedorDeUsuario = null
 ) : IdentityDbContext<IdentityUser<Guid>, IdentityRole<Guid>, Guid>(options)
 {
-    private static readonly Guid UsuarioId = new("01a058f4-a048-79b3-b1a6-0f01d629a126");
-    public DbSet<Usuario> Usuarios => Set<Usuario>();
-
+    // public DbSet<Curso> Cursos => Set<Curso>();
+    // public DbSet<Certificado> Certificados => Set<Certificado>();
         
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -20,13 +21,7 @@ public sealed class GeradorDeCertificadosDbContext(
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(GeradorDeCertificadosDbContext).Assembly);
-        
-        modelBuilder.Entity<IdentityRole<Guid>>().HasData(new IdentityRole<Guid>
-        {
-            Id = UsuarioId,           
-            ConcurrencyStamp = "01a058f7-9492-73bc-8e4b-934c53594ea6"
-        });
-        
+                   
         if (provedorDeUsuario is not null)
         {
         }
