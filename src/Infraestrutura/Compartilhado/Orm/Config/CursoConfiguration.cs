@@ -25,6 +25,7 @@ public sealed class CursoConfiguration : IEntityTypeConfiguration<Curso>
             .IsRequired();
 
         builder.Property(c => c.DataConclusao)
+            .HasColumnType("date")
             .IsRequired();
     }
 }
