@@ -1,7 +1,7 @@
 using GeradorDeCertificados.Dominio.Compartilhado.Auth;
 using Microsoft.AspNetCore.Identity;
 
-namespace DeliveryApp.Infraestrutura.Compartilhado.Auth;
+namespace GeradorDeCertificados.Infraestrutura.Compartilhado.Auth;
 
 public sealed class GerenciadorDeIdentidade(
     UserManager<IdentityUser<Guid>> userManager

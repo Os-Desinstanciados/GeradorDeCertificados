@@ -1,7 +1,7 @@
-// using GeradorDeCertificados.Dominio.Compartilhado.Auth;
 // using GeradorDeCertificados.Dominio.Modulos.Certificados;
 // using GeradorDeCertificados.Dominio.Modulos.Cursos;
-// using GeradorDeCertificados.Infraestrutura.Compartilhado.Auth;
+using GeradorDeCertificados.Infraestrutura.Compartilhado.Auth;
+using GeradorDeCertificados.Dominio.Compartilhado.Auth;
 using GeradorDeCertificados.Infraestrutura.Compartilhado.Orm;
 // using GeradorDeCertificados.Infraestrutura.Modulos.Certificados;
 // using GeradorDeCertificados.Infraestrutura.Modulos.Cursos;
@@ -19,7 +19,7 @@ public static class DependencyInjection
         IConfiguration configuration
     )
     {
-        // services.AddScoped<IGerenciadorDeIdentidade, GerenciadorDeIdentidade>();
+        services.AddScoped<IGerenciadorDeIdentidade, GerenciadorDeIdentidade>();
         // services.AddScoped<IRepositorioCurso, RepositorioCursoEmOrm>();
         // services.AddScoped<IRepositorioCertificado, RepositorioCertificadoEmOrm>();
 
