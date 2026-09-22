@@ -11,8 +11,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
 
-using GeradorDeCertificados.Aplicacao;
-using GeradorDeCertificados.Infraestrutura;
 var builder = WebApplication.CreateBuilder(args);
 
 // Configuração de opções de serviços
