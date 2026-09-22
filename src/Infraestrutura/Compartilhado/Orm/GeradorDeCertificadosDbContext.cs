@@ -1,4 +1,5 @@
 // using GeradorDeCertificados.Dominio.Modulos.Certificados;
+using GeradorDeCertificados.Dominio.Modulos.Curso;
 // using GeradorDeCertificados.Dominio.Modulos.Cursos;
 using GeradorDeCertificados.Dominio.Compartilhado.Auth;
 using Microsoft.AspNetCore.Identity;
@@ -12,7 +13,7 @@ public sealed class GeradorDeCertificadosDbContext(
     IProvedorDeUsuario? provedorDeUsuario = null
 ) : IdentityDbContext<IdentityUser<Guid>, IdentityRole<Guid>, Guid>(options)
 {
-    // public DbSet<Curso> Cursos => Set<Curso>();
+    public DbSet<Curso> Cursos => Set<Curso>();
     // public DbSet<Certificado> Certificados => Set<Certificado>();
         
 
