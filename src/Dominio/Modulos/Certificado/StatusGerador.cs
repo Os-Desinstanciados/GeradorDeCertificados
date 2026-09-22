@@ -1,8 +1,10 @@
 namespace GeradorDeCertificados.Dominio.Modulos.Certificado;
 
-public enum StatusCertificado
+public enum StatusGerador
 {
     Pendente,
-    Gerado,
+    GerandoCertificados,
+    GerandoZip,
+    Concluido,
     Falha
 }
