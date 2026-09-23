@@ -1,4 +1,4 @@
-using GeradorDeCertificados.Dominio.Modulos.Certificado;
+using GeradorDeCertificados.Dominio.Modulos.Certificados;
 using GeradorDeCertificados.Infraestrutura.Compartilhado.Orm;
 using Microsoft.EntityFrameworkCore;
 
