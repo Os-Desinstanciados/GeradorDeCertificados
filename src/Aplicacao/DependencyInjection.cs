@@ -1,4 +1,4 @@
-//using GeradorDeCertificados.Aplicacao.Modulos.Pedidos.Mensageria;
+//using GeradorDeCertificados.Aplicacao.Modulos.Certificados.Mensageria;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,7 +29,7 @@ public static class DependencyInjection
             {
                 rabbitMq.Host(new Uri(rabbitMqConnectionString));
 
-                rabbitMq.ReceiveEndpoint("pedidos-criados", endpoint =>
+                rabbitMq.ReceiveEndpoint("certificados-criados", endpoint =>
                 {
                     endpoint.PrefetchCount = 4; // Quantas mensagens o RabbitMQ deve carregar adiantado
                     endpoint.ConcurrentMessageLimit = 2; // Quantos consumers serão instanciados em paralelo

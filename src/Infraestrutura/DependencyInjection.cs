@@ -1,16 +1,14 @@
-// using GeradorDeCertificados.Dominio.Modulos.Certificados;
 using GeradorDeCertificados.Dominio.Modulos.Curso;
-// using GeradorDeCertificados.Infraestrutura.Compartilhado.Auth;
-// using GeradorDeCertificados.Dominio.Modulos.Cursos;
 using GeradorDeCertificados.Infraestrutura.Compartilhado.Auth;
 using GeradorDeCertificados.Dominio.Compartilhado.Auth;
 using GeradorDeCertificados.Infraestrutura.Compartilhado.Orm;
-// using GeradorDeCertificados.Infraestrutura.Modulos.Certificados;
 using GeradorDeCertificados.Infraestrutura.Modulos.Cursos;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using GeradorDeCertificados.Dominio.Modulos.Certificado;
+using GeradorDeCertificados.Infraestrutura.Modulos.Certificados;
 
 namespace GeradorDeCertificados.Infraestrutura;
 
@@ -20,12 +18,10 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration
     )
-    {
-        // services.AddScoped<IGerenciadorDeIdentidade, GerenciadorDeIdentidade>();
+    {        
         services.AddScoped<IRepositorioCurso, RepositorioCursoEmOrm>();
-        services.AddScoped<IGerenciadorDeIdentidade, GerenciadorDeIdentidade>();
-        // services.AddScoped<IRepositorioCurso, RepositorioCursoEmOrm>();
-        // services.AddScoped<IRepositorioCertificado, RepositorioCertificadoEmOrm>();
+        services.AddScoped<IGerenciadorDeIdentidade, GerenciadorDeIdentidade>();        
+        services.AddScoped<IRepositorioCertificado, RepositorioCertificadoEmOrm>();
 
         services.AddIdentityCore<IdentityUser<Guid>>(options =>
         {
