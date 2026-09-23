@@ -1,4 +1,4 @@
-namespace GeradorDeCertificados.Dominio.Modulos.Certificado;
+namespace GeradorDeCertificados.Dominio.Modulos.Certificados;
 
 public enum StatusGerador
 {

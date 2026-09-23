@@ -1,6 +1,6 @@
 using GeradorDeCertificados.Aplicacao.Modulos.Cursos.DTOs;
 using GeradorDeCertificados.Aplicacao.Modulos.Cursos.Util;
-using GeradorDeCertificados.Dominio.Modulos.Curso;
+using GeradorDeCertificados.Dominio.Modulos.Cursos;
 using FluentResults;
 using MediatR;
 

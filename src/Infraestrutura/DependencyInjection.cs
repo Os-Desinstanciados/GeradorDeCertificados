@@ -1,4 +1,4 @@
-using GeradorDeCertificados.Dominio.Modulos.Curso;
+using GeradorDeCertificados.Dominio.Modulos.Cursos;
 using GeradorDeCertificados.Infraestrutura.Compartilhado.Auth;
 using GeradorDeCertificados.Dominio.Compartilhado.Auth;
 using GeradorDeCertificados.Infraestrutura.Compartilhado.Orm;

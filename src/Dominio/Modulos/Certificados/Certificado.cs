@@ -1,6 +1,6 @@
 using GeradorDeCertificados.Dominio.Compartilhado;
 
-namespace GeradorDeCertificados.Dominio.Modulos.Certificado;
+namespace GeradorDeCertificados.Dominio.Modulos.Certificados;
 
 public sealed class Certificado : EntidadeBase<Certificado>
 {

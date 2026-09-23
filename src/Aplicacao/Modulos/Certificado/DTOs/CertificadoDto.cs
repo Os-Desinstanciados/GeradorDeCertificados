@@ -1,6 +1,6 @@
-using GeradorDeCertificados.Dominio.Modulos.Certificado;
+using GeradorDeCertificados.Dominio.Modulos.Certificados;
 
-namespace GeradorDeCertificados.Aplicacao.Modulos.Certificado.DTOs;
+namespace GeradorDeCertificados.Aplicacao.Modulos.Certificados.DTOs;
 
 public record CertificadoDto(
     Guid Id,

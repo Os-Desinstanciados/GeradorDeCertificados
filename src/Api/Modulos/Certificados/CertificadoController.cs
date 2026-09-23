@@ -1,0 +1,111 @@
+using GeradorDeCertificados.Aplicacao.Modulos.Certificados;
+using GeradorDeCertificados.WebApi.Compartilhado.Http;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+
+namespace GeradorDeCertificados.Api.Modulos.Certificados;
+
+[ApiController]
+[Route("api/cursos/{cursoId:guid}")]
+public sealed class CertificadosController(
+    IMediator mediator
+) : ControllerBase
+{
+    [HttpPost("certificados")]
+    [ProducesResponseType<GerarCertificadosResponse>(StatusCodes.Status202Accepted)]
+    public async Task<ActionResult<GerarCertificadosResponse>> SolicitarGeracao(
+        Guid cursoId,
+        GerarCertificadosRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        var resultado = await mediator.Send(
+            new SolicitarGeracaoCertificadosCommand(
+                cursoId,
+                request.Alunos?.Select(aluno => aluno.Nome).ToList() ?? []
+            ),
+            cancellationToken
+        );
+
+        if (resultado.IsFailed)
+            return this.ProblemDetails(resultado);
+
+        return AcceptedAtAction(
+            nameof(ObterStatus),
+            new { cursoId },
+            new GerarCertificadosResponse(
+                resultado.Value.Id,
+                resultado.Value.Status
+            )
+        );
+    }
+
+    [HttpGet("status")]
+    [ProducesResponseType<StatusProcessamentoResponse>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<StatusProcessamentoResponse>> ObterStatus(
+        Guid cursoId,
+        CancellationToken cancellationToken
+    )
+    {
+        var resultado = await mediator.Send(
+            new ObterStatusProcessamentoQuery(cursoId),
+            cancellationToken
+        );
+
+        if (resultado.IsFailed)
+            return this.ProblemDetails(resultado);
+
+        return Ok(new StatusProcessamentoResponse(
+            resultado.Value.GeracaoId,
+            resultado.Value.CursoId,
+            resultado.Value.Status
+        ));
+    }
+
+    [HttpGet("certificados")]
+    [ProducesResponseType<IReadOnlyList<CertificadoResponse>>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<IReadOnlyList<CertificadoResponse>>> Listar(
+        Guid cursoId,
+        CancellationToken cancellationToken
+    )
+    {
+        var resultado = await mediator.Send(
+            new ListarCertificadosPorCursoQuery(cursoId),
+            cancellationToken
+        );
+
+        if (resultado.IsFailed)
+            return this.ProblemDetails(resultado);
+
+        IReadOnlyList<CertificadoResponse> certificados = [.. resultado.Value.Select(
+            certificado => new CertificadoResponse(
+                certificado.Id,
+                certificado.NomeAluno,
+                certificado.DataGeracao,
+                certificado.Status
+            )
+        )];
+
+        return Ok(certificados);
+    }
+
+    [HttpGet("certificados/download", Name = "DownloadCertificadosZip")]
+    [ProducesResponseType(typeof(FileStreamResult), StatusCodes.Status200OK, "application/zip")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> Download(
+        Guid cursoId,
+        CancellationToken cancellationToken
+    )
+    {
+        var resultado = await mediator.Send(
+            new ObterArquivoCertificadosQuery(cursoId),
+            cancellationToken
+        );
+
+        if (resultado.IsFailed)
+            return this.ProblemDetails(resultado);
+
+        return File(resultado.Value.Conteudo, resultado.Value.ContentType, resultado.Value.Name);
+    }
+}

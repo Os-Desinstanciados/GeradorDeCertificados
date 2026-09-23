@@ -1,6 +1,6 @@
 using GeradorDeCertificados.Dominio.Compartilhado;
 
-namespace GeradorDeCertificados.Dominio.Modulos.Certificado;
+namespace GeradorDeCertificados.Dominio.Modulos.Certificados;
 
 public sealed class Gerador : EntidadeBase<Gerador>
 {
@@ -16,6 +16,9 @@ public sealed class Gerador : EntidadeBase<Gerador>
         Status is StatusGerador.Pendente
             or StatusGerador.GerandoCertificados
             or StatusGerador.GerandoZip;
+
+     public bool EstaFinalizado =>
+        Status is StatusGerador.Concluido or StatusGerador.Falha;
 
     private Gerador() { }
 
@@ -56,6 +59,18 @@ public sealed class Gerador : EntidadeBase<Gerador>
     {
         Status = entidadeAtualizada.Status;
         CaminhoZip = entidadeAtualizada.CaminhoZip;
+    }
+
+    public void GerarCertificados()
+    {
+        if (Status != StatusGerador.Pendente)
+        {
+            throw new InvalidOperationException(
+                "O gerador está ocupado ou ouve uma falha."
+            );
+        }
+
+        Status = StatusGerador.GerandoCertificados;
     }
 
     public void MarcarComoGerandoCertificados()
