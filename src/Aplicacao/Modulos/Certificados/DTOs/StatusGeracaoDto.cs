@@ -3,7 +3,7 @@ using GeradorDeCertificados.Dominio.Modulos.Certificados;
 namespace GeradorDeCertificados.Aplicacao.Modulos.Certificados.DTOs;
 
 public record StatusGeracaoDto(
-    Guid GeracaoId,
+    Guid GeradorId,
     Guid CursoId,
     StatusGerador Status
 );

@@ -10,15 +10,20 @@ public sealed class Gerador : EntidadeBase<Gerador>
     public StatusGerador Status { get; private set; }
     public string? CaminhoZip { get; private set; }
     public DateTime DataSolicitacao { get; private set; }
+    public DateTime? ConcluidoEm { get; private set; }
     public IReadOnlyCollection<Certificado> Certificados => certificados;
+
+    public int Gerados => certificados.Count(c => c.Status == StatusCertificado.Gerado);
+    public int Falhas => certificados.Count(c => c.Status == StatusCertificado.Falha);
+    public bool TodosCertificadosProcessados =>
+        certificados.Count > 0 && certificados.All(c => c.Status != StatusCertificado.Pendente);
+    public bool EstaFinalizado =>
+        Status is StatusGerador.Concluido or StatusGerador.Falha;
 
     public bool EstaEmAndamento =>
         Status is StatusGerador.Pendente
             or StatusGerador.GerandoCertificados
-            or StatusGerador.GerandoZip;
-
-     public bool EstaFinalizado =>
-        Status is StatusGerador.Concluido or StatusGerador.Falha;
+            or StatusGerador.GerandoZip;    
 
     private Gerador() { }
 
@@ -61,36 +66,102 @@ public sealed class Gerador : EntidadeBase<Gerador>
         CaminhoZip = entidadeAtualizada.CaminhoZip;
     }
 
-    public void GerarCertificados()
+    public void RegistrarSucesso(Guid certificadoId, string caminhoArquivo)
+    {
+        Certificado certificado = EncontrarPendente(certificadoId);
+        certificado.RegistrarGeracao(caminhoArquivo);
+    }
+
+    public void RegistrarFalha(Guid certificadoId)
+    {
+        Certificado certificado = EncontrarPendente(certificadoId);
+        certificado.RegistrarFalha();
+    }
+
+    public void IniciarGeracaoCertificados()
     {
         if (Status != StatusGerador.Pendente)
         {
             throw new InvalidOperationException(
-                "O gerador está ocupado ou ouve uma falha."
+                "Só é possível iniciar a geração de certificados a partir do status Pendente."
             );
         }
 
         Status = StatusGerador.GerandoCertificados;
     }
 
-    public void MarcarComoGerandoCertificados()
+    public void IniciarGeracaoZip()
     {
-        Status = StatusGerador.GerandoCertificados;
-    }
+        if (Status != StatusGerador.GerandoCertificados)
+        {
+            throw new InvalidOperationException(
+                "Só é possível iniciar a geração do ZIP a partir do status GerandoCertificados."
+            );
+        }
 
-    public void MarcarComoGerandoZip()
-    {
+        if (!TodosCertificadosProcessados)
+        {
+            throw new InvalidOperationException(
+                "Não é possível iniciar a geração do ZIP enquanto houver certificados pendentes."
+            );
+        }
+
+        if (Gerados == 0)
+        {
+            throw new InvalidOperationException(
+                "Não é possível iniciar a geração do ZIP sem pelo menos um certificado gerado."
+            );
+        }
+
         Status = StatusGerador.GerandoZip;
     }
 
-    public void MarcarComoConcluido(string caminhoZip)
+    public void RegistrarZip(string caminhoZip)
     {
+        if (Status != StatusGerador.GerandoZip)
+        {
+            throw new InvalidOperationException(
+                "Só é possível registrar o ZIP a partir do status GerandoZip."
+            );
+        }
+
+        if (!TodosCertificadosProcessados)
+        {
+            throw new InvalidOperationException(
+                "Não é possível registrar o ZIP enquanto houver certificados pendentes."
+            );
+        }
+
+        if (string.IsNullOrWhiteSpace(caminhoZip))
+        {
+            throw new ArgumentException(
+                "O caminho do arquivo ZIP é obrigatório.",
+                nameof(caminhoZip)
+            );
+        }
+
         CaminhoZip = caminhoZip;
         Status = StatusGerador.Concluido;
+        ConcluidoEm = DateTime.UtcNow;
     }
 
-    public void MarcarComoFalha()
+    public void RegistrarFalhaGerador()
     {
+        if (EstaFinalizado)
+        {
+            throw new InvalidOperationException(
+                "Não é possível registrar falha em um gerador já finalizado."
+            );
+        }
+
         Status = StatusGerador.Falha;
+        ConcluidoEm = DateTime.UtcNow;
+    }
+
+    private Certificado EncontrarPendente(Guid certificadoId)
+    {
+        return certificados.Single(c =>
+            c.Id == certificadoId && c.Status == StatusCertificado.Pendente
+        );
     }
 }

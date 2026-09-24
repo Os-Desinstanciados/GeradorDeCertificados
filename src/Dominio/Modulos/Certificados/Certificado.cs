@@ -50,14 +50,22 @@ public sealed class Certificado : EntidadeBase<Certificado>
         Status = entidadeAtualizada.Status;
     }
 
-    public void MarcarComoGerado(string caminho, DateTime dataGeracao)
+    public void RegistrarGeracao(string caminhoArquivo)
     {
-        CaminhoArquivo = caminho;
-        DataGeracao = dataGeracao;
+        if (string.IsNullOrWhiteSpace(caminhoArquivo))
+        {
+            throw new ArgumentException(
+                "O caminho do arquivo gerado é obrigatório.",
+                nameof(caminhoArquivo)
+            );
+        }
+
+        CaminhoArquivo = caminhoArquivo;
         Status = StatusCertificado.Gerado;
+        DataGeracao = DateTime.UtcNow;
     }
 
-    public void MarcarComoFalha()
+    public void RegistrarFalha()
     {
         Status = StatusCertificado.Falha;
     }

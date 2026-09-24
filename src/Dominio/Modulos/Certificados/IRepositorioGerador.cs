@@ -5,6 +5,16 @@ namespace GeradorDeCertificados.Dominio.Modulos.Certificados;
 
 public interface IRepositorioGerador : IRepositorio<Gerador>
 {
+    Task SalvarAsync(
+        Gerador gerador,
+        CancellationToken cancellationToken = default
+    );
+
+    Task<Gerador?> SelecionarPorCursoAsync(
+        Guid cursoId,
+        CancellationToken cancellationToken = default
+    );
+
     Task<Gerador?> SelecionarPorCursoIdAsync(
         Guid cursoId,
         CancellationToken cancellationToken = default
@@ -13,16 +23,5 @@ public interface IRepositorioGerador : IRepositorio<Gerador>
     Task<bool> ExisteEmAndamentoPorCursoIdAsync(
         Guid cursoId,
         CancellationToken cancellationToken = default
-    );
-
-    Task<Gerador?> SelecionarMaisRecentePorCursoIdAsync(
-        Guid cursoId,
-        CancellationToken cancellationToken = default
-    );
-
-    Task<string> GerarAsync(
-        Certificado certificado,
-        Curso curso,
-        CancellationToken cancellationToken
     );
 }

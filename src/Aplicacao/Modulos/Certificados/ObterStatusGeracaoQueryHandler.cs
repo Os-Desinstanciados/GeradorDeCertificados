@@ -1,12 +1,12 @@
 using FluentResults;
-using GeradorDeCertificados.Aplicacao.Modulos.Certificado.DTOs;
-using GeradorDeCertificados.Aplicacao.Modulos.Certificado.Util;
+using GeradorDeCertificados.Aplicacao.Modulos.Certificados.DTOs;
+using GeradorDeCertificados.Aplicacao.Modulos.Certificados.Util;
 using GeradorDeCertificados.Aplicacao.Modulos.Cursos.Util;
-using GeradorDeCertificados.Dominio.Modulos.Certificado;
-using GeradorDeCertificados.Dominio.Modulos.Curso;
+using GeradorDeCertificados.Dominio.Modulos.Certificados;
+using GeradorDeCertificados.Dominio.Modulos.Cursos;
 using MediatR;
 
-namespace GeradorDeCertificados.Aplicacao.Modulos.Certificado;
+namespace GeradorDeCertificados.Aplicacao.Modulos.Certificados;
 
 public record ObterStatusGeracaoQuery(Guid CursoId)
     : IRequest<Result<StatusGeracaoDto>>;

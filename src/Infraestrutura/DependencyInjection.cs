@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using GeradorDeCertificados.Dominio.Modulos.Certificado;
+using GeradorDeCertificados.Dominio.Modulos.Certificados;
 using GeradorDeCertificados.Infraestrutura.Modulos.Certificados;
 
 namespace GeradorDeCertificados.Infraestrutura;

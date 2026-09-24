@@ -41,22 +41,22 @@ public sealed class CertificadosController(
     }
 
     [HttpGet("status")]
-    [ProducesResponseType<StatusProcessamentoResponse>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<StatusProcessamentoResponse>> ObterStatus(
+    [ProducesResponseType<StatusGeradorResponse>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<StatusGeradorResponse>> ObterStatus(
         Guid cursoId,
         CancellationToken cancellationToken
     )
     {
         var resultado = await mediator.Send(
-            new ObterStatusProcessamentoQuery(cursoId),
+            new ObterStatusGeracaoQuery(cursoId),
             cancellationToken
         );
 
         if (resultado.IsFailed)
             return this.ProblemDetails(resultado);
 
-        return Ok(new StatusProcessamentoResponse(
-            resultado.Value.GeracaoId,
+        return Ok(new StatusGeradorResponse(
+            resultado.Value.GeradorId,
             resultado.Value.CursoId,
             resultado.Value.Status
         ));
@@ -99,13 +99,13 @@ public sealed class CertificadosController(
     )
     {
         var resultado = await mediator.Send(
-            new ObterArquivoCertificadosQuery(cursoId),
+            new ObterArquivoCertificadoQuery(cursoId),
             cancellationToken
         );
 
         if (resultado.IsFailed)
             return this.ProblemDetails(resultado);
 
-        return File(resultado.Value.Conteudo, resultado.Value.ContentType, resultado.Value.Name);
+        return File(resultado.Value.Stream, resultado.Value.ContentType, resultado.Value.Name);
     }
 }
