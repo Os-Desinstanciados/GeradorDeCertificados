@@ -3,17 +3,20 @@ using System;
 using GeradorDeCertificados.Infraestrutura.Compartilhado.Orm;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace GeradorDeCertificados.Infraestrutura.Migrations
+namespace GeradorDeCertificados.Infraestrutura.Compartilhado.Orm.Migrations
 {
     [DbContext(typeof(GeradorDeCertificadosDbContext))]
-    partial class GeradorDeCertificadosDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260925165638_AddGeradorCertificados")]
+    partial class AddGeradorCertificados
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

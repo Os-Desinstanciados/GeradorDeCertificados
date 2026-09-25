@@ -13,6 +13,7 @@ public sealed class GeradorDeCertificadosDbContext(
 ) : IdentityDbContext<IdentityUser<Guid>, IdentityRole<Guid>, Guid>(options)
 {
     public DbSet<Curso> Cursos => Set<Curso>();
+    public DbSet<Gerador> Geradores => Set<Gerador>();
     public DbSet<Certificado> Certificados => Set<Certificado>();
         
 
