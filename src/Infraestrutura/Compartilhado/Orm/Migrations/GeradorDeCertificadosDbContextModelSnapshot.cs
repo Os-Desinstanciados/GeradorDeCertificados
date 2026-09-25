@@ -38,6 +38,93 @@ namespace GeradorDeCertificados.Infraestrutura.Compartilhado.Orm.Migrations
                     b.ToTable("TBUsuario", (string)null);
                 });
 
+            modelBuilder.Entity("GeradorDeCertificados.Dominio.Modulos.Certificados.Certificado", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CaminhoArquivo")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<DateTime?>("DataGeracao")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("GeradorId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("NomeAluno")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer")
+                        .HasColumnName("Status");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GeradorId");
+
+                    b.ToTable("TBCertificados", (string)null);
+                });
+
+            modelBuilder.Entity("GeradorDeCertificados.Dominio.Modulos.Certificados.Gerador", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CaminhoZip")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<DateTime?>("ConcluidoEm")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("CursoId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("DataSolicitacao")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CursoId");
+
+                    b.ToTable("TBGeradores", (string)null);
+                });
+
+            modelBuilder.Entity("GeradorDeCertificados.Dominio.Modulos.Cursos.Curso", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("CargaHoraria")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("DataConclusao")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Descricao")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TBCursos", (string)null);
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
                 {
                     b.Property<Guid>("Id")
@@ -243,6 +330,24 @@ namespace GeradorDeCertificados.Infraestrutura.Compartilhado.Orm.Migrations
                         .HasConstraintName("FK_TBInstituicao_AspNetUsers");
                 });
 
+            modelBuilder.Entity("GeradorDeCertificados.Dominio.Modulos.Certificados.Certificado", b =>
+                {
+                    b.HasOne("GeradorDeCertificados.Dominio.Modulos.Certificados.Gerador", null)
+                        .WithMany("Certificados")
+                        .HasForeignKey("GeradorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("GeradorDeCertificados.Dominio.Modulos.Certificados.Gerador", b =>
+                {
+                    b.HasOne("GeradorDeCertificados.Dominio.Modulos.Cursos.Curso", null)
+                        .WithMany()
+                        .HasForeignKey("CursoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
@@ -292,6 +397,11 @@ namespace GeradorDeCertificados.Infraestrutura.Compartilhado.Orm.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("GeradorDeCertificados.Dominio.Modulos.Certificados.Gerador", b =>
+                {
+                    b.Navigation("Certificados");
                 });
 #pragma warning restore 612, 618
         }

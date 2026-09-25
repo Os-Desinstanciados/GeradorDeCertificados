@@ -12,21 +12,6 @@ namespace GeradorDeCertificados.Infraestrutura.Compartilhado.Orm.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "TBCursos",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Nome = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    Descricao = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
-                    CargaHoraria = table.Column<int>(type: "integer", nullable: false),
-                    DataConclusao = table.Column<DateTime>(type: "date", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TBCursos", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "TBGeradores",
                 columns: table => new
                 {
@@ -89,9 +74,6 @@ namespace GeradorDeCertificados.Infraestrutura.Compartilhado.Orm.Migrations
 
             migrationBuilder.DropTable(
                 name: "TBGeradores");
-
-            migrationBuilder.DropTable(
-                name: "TBCursos");
         }
     }
 }
