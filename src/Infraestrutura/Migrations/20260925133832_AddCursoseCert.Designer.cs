@@ -9,11 +9,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace GeradorDeCertificados.Infraestrutura.Compartilhado.Orm.Migrations
+namespace GeradorDeCertificados.Infraestrutura.Migrations
 {
     [DbContext(typeof(GeradorDeCertificadosDbContext))]
-    [Migration("20260922164916_AddAuth")]
-    partial class AddAuth
+    [Migration("20260925133832_AddCursoseCert")]
+    partial class AddCursoseCert
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,6 +39,60 @@ namespace GeradorDeCertificados.Infraestrutura.Compartilhado.Orm.Migrations
                         .HasName("PK_TBUsuario");
 
                     b.ToTable("TBUsuario", (string)null);
+                });
+
+            modelBuilder.Entity("GeradorDeCertificados.Dominio.Modulos.Certificados.Certificado", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CaminhoArquivo")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<DateTime?>("DataGeracao")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("GeradorId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("NomeAluno")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer")
+                        .HasColumnName("Status");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TBCertificados", (string)null);
+                });
+
+            modelBuilder.Entity("GeradorDeCertificados.Dominio.Modulos.Cursos.Curso", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("CargaHoraria")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("DataConclusao")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Descricao")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TBCursos", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>

@@ -17,12 +17,57 @@ namespace GeradorDeCertificados.Infraestrutura.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.12")
+                .HasAnnotation("ProductVersion", "10.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("GeradorDeCertificados.Dominio.Modulos.Curso.Curso", b =>
+            modelBuilder.Entity("GeradorDeCertificados.Dominio.Compartilhado.Auth.Usuario", b =>
+                {
+                    b.Property<Guid>("UsuarioId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("UsuarioId")
+                        .HasName("PK_TBUsuario");
+
+                    b.ToTable("TBUsuario", (string)null);
+                });
+
+            modelBuilder.Entity("GeradorDeCertificados.Dominio.Modulos.Certificados.Certificado", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CaminhoArquivo")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<DateTime?>("DataGeracao")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("GeradorId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("NomeAluno")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer")
+                        .HasColumnName("Status");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TBCertificados", (string)null);
+                });
+
+            modelBuilder.Entity("GeradorDeCertificados.Dominio.Modulos.Cursos.Curso", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -240,6 +285,16 @@ namespace GeradorDeCertificados.Infraestrutura.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("GeradorDeCertificados.Dominio.Compartilhado.Auth.Usuario", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser<System.Guid>", null)
+                        .WithOne()
+                        .HasForeignKey("GeradorDeCertificados.Dominio.Compartilhado.Auth.Usuario", "UsuarioId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("FK_TBInstituicao_AspNetUsers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
