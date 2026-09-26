@@ -1,4 +1,4 @@
-//using GeradorDeCertificados.Aplicacao.Modulos.Certificados.Mensageria;
+using GeradorDeCertificados.Aplicacao.Modulos.Certificados.Mensageria;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,12 +18,14 @@ public static class DependencyInjection
         });
 
         var rabbitMqConnectionString = configuration.GetConnectionString("RabbitMq")
-            ?? throw new InvalidOperationException("A ConnectionString \"RabbitMq\" não foi configurada");
+            ?? throw new InvalidOperationException(
+                "A ConnectionString \"RabbitMq\" não foi configurada"
+            );
 
         services.AddMassTransit(config =>
         {
             // Configura a injeção dos Consumers
-            //config.AddConsumer<>();
+            config.AddConsumer<CertificadoConsumer>();
 
             config.UsingRabbitMq((context, rabbitMq) =>
             {
@@ -34,7 +36,7 @@ public static class DependencyInjection
                     endpoint.PrefetchCount = 4; // Quantas mensagens o RabbitMQ deve carregar adiantado
                     endpoint.ConcurrentMessageLimit = 2; // Quantos consumers serão instanciados em paralelo
 
-                    //endpoint.ConfigureConsumer<>(context);
+                    endpoint.ConfigureConsumer<CertificadoConsumer>(context);
                 });
             });
         });

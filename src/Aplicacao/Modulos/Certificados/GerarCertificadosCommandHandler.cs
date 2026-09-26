@@ -62,7 +62,7 @@ public sealed class SolicitarGeracaoCertificadosCommandHandler(
         await repositorioGerador.CadastrarAsync(gerador, cancellationToken);
 
         await publishEndpoint.Publish(
-            new CertificadoMessage(gerador.Id, request.CursoId),
+            new CertificadoMessage(request.CursoId, gerador.Id),
             cancellationToken
         );
 

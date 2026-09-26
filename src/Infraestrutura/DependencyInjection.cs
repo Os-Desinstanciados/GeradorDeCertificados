@@ -23,6 +23,7 @@ public static class DependencyInjection
         services.AddScoped<IGerenciadorDeIdentidade, GerenciadorDeIdentidade>();        
         services.AddScoped<IRepositorioCertificado, RepositorioCertificadoEmOrm>();
         services.AddScoped<IRepositorioGerador, RepositorioGeradorEmOrm>();
+        services.AddScoped<ICertificadoPdfGenerator, CertificadoPdfGenerator>();
 
         services.AddIdentityCore<IdentityUser<Guid>>(options =>
         {
