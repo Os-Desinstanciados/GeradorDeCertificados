@@ -5,7 +5,6 @@ using GeradorDeCertificados.Infraestrutura;
 using GeradorDeCertificados.Infraestrutura.Compartilhado.Orm;
 using GeradorDeCertificados.WebApi.Compartilhado.Auth;
 using GeradorDeCertificados.WebApi.Compartilhado.Http;
-//using GeradorDeCertificados.WebApi.Compartilhado.Logging;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -22,10 +21,6 @@ builder.Services
     .Validate(o => !string.IsNullOrWhiteSpace(o.Key))
     .ValidateOnStart();
 
-// builder.Services
-//     .AddOptions<NewRelicOptions>()
-//     .BindConfiguration(NewRelicOptions.SectionName);
-
 builder.Services
     .AddOptions<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme)
     .Configure<IOptions<JwtOptions>>(JwtExtensions.ConfigureJwtBearerValidation);
@@ -34,8 +29,8 @@ builder.Services
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddJwtAuthServices();
-//builder.Services.AddSerilogServices(builder.Logging);
 
+// Configuração dos controllers
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -43,18 +38,29 @@ builder.Services.AddControllers()
     })
     .ConfigureApiBehaviorOptions(options =>
     {
-        options.ClientErrorMapping[StatusCodes.Status400BadRequest].Link = ProblemDetailsTypes.BadRequest;
-        options.ClientErrorMapping[StatusCodes.Status401Unauthorized].Link = ProblemDetailsTypes.Unauthorized;
-        options.ClientErrorMapping[StatusCodes.Status403Forbidden].Link = ProblemDetailsTypes.Forbidden;
-        options.ClientErrorMapping[StatusCodes.Status404NotFound].Link = ProblemDetailsTypes.NotFound;
-        options.ClientErrorMapping[StatusCodes.Status409Conflict].Link = ProblemDetailsTypes.Conflict;
+        options.ClientErrorMapping[StatusCodes.Status400BadRequest].Link =
+            ProblemDetailsTypes.BadRequest;
+
+        options.ClientErrorMapping[StatusCodes.Status401Unauthorized].Link =
+            ProblemDetailsTypes.Unauthorized;
+
+        options.ClientErrorMapping[StatusCodes.Status403Forbidden].Link =
+            ProblemDetailsTypes.Forbidden;
+
+        options.ClientErrorMapping[StatusCodes.Status404NotFound].Link =
+            ProblemDetailsTypes.NotFound;
+
+        options.ClientErrorMapping[StatusCodes.Status409Conflict].Link =
+            ProblemDetailsTypes.Conflict;
     });
 
+// Configuração do Problem Details
 builder.Services.AddProblemDetails(options =>
 {
     options.CustomizeProblemDetails = context =>
     {
-        string? type = ProblemDetailsTypes.ObterPorStatus(context.ProblemDetails.Status);
+        string? type =
+            ProblemDetailsTypes.ObterPorStatus(context.ProblemDetails.Status);
 
         if (type is not null)
             context.ProblemDetails.Type = type;
@@ -62,12 +68,14 @@ builder.Services.AddProblemDetails(options =>
         if (context.ProblemDetails.Status == StatusCodes.Status401Unauthorized)
         {
             context.ProblemDetails.Title = "Não Autenticado";
-            context.ProblemDetails.Detail = "É necessário fornecer credenciais válidas.";
+            context.ProblemDetails.Detail =
+                "É necessário fornecer credenciais válidas.";
         }
         else if (context.ProblemDetails.Status == StatusCodes.Status403Forbidden)
         {
             context.ProblemDetails.Title = "Acesso Negado";
-            context.ProblemDetails.Detail = "O usuário autenticado não tem permissão para acessar este recurso.";
+            context.ProblemDetails.Detail =
+                "O usuário autenticado não tem permissão para acessar este recurso.";
         }
 
         context.ProblemDetails.Extensions["traceId"] =
@@ -75,7 +83,9 @@ builder.Services.AddProblemDetails(options =>
     };
 });
 
+// Configuração do OpenAPI / Swagger
 builder.Services.AddOpenApi();
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -96,20 +106,31 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
+// Habilita Swagger também em produção
+app.MapOpenApi().AllowAnonymous();
+
+app.UseSwaggerUI(options =>
+    options.SwaggerEndpoint(
+        "/openapi/v1.json",
+        "GeradorDeCertificados.WebApi v1"
+    )
+);
+
+// Aplica migrations automaticamente apenas em desenvolvimento
 if (app.Environment.IsDevelopment())
 {
     using var scope = app.Services.CreateScope();
 
-    var dbContext = scope.ServiceProvider.GetRequiredService<GeradorDeCertificadosDbContext>();
+    var dbContext =
+        scope.ServiceProvider.GetRequiredService<GeradorDeCertificadosDbContext>();
 
-    dbContext.Database.Migrate();
-
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    if (dbContext.Database.IsSqlServer())
+        dbContext.Database.Migrate();
 }
 
 app.UseExceptionHandler();
 app.UseStatusCodePages();
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
