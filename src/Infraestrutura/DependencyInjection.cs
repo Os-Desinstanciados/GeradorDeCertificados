@@ -18,9 +18,9 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration
     )
-    {        
+    {
         services.AddScoped<IRepositorioCurso, RepositorioCursoEmOrm>();
-        services.AddScoped<IGerenciadorDeIdentidade, GerenciadorDeIdentidade>();        
+        services.AddScoped<IGerenciadorDeIdentidade, GerenciadorDeIdentidade>();
         services.AddScoped<IRepositorioCertificado, RepositorioCertificadoEmOrm>();
         services.AddScoped<IRepositorioGerador, RepositorioGeradorEmOrm>();
         services.AddScoped<ICertificadoPdfGenerator, CertificadoPdfGenerator>();
@@ -49,16 +49,16 @@ public static class DependencyInjection
             }
             else
             {
-                string? connectionString = configuration.GetConnectionString("PostgresEF");
+                string? connectionString = configuration.GetConnectionString("SqlServer");
 
                 if (string.IsNullOrWhiteSpace(connectionString))
                 {
                     throw new InvalidOperationException(
-                        $"A connection string \"PostgresEF\" não foi encontrada."
+                        $"A connection string \"SqlServer\" não foi encontrada."
                     );
                 }
 
-                options.UseNpgsql(connectionString, opt =>
+                options.UseSqlServer(connectionString, opt =>
                 {
                     opt.EnableRetryOnFailure(3);
                 });
