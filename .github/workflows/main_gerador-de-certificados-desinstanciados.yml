@@ -65,7 +65,7 @@ jobs:
         run: |
           dotnet ef database update `
             --project src/Infraestrutura/GeradorDeCertificados.Infraestrutura.csproj `
-            --startup-project src/Api/GeradorDeCertificados.WebApi.csproj ` `
+            --startup-project src/Api/GeradorDeCertificados.WebApi.csproj `
             --configuration Release `
             --connection "$env:SQLSERVER_CONNECTIONSTRING"
 
@@ -98,7 +98,9 @@ jobs:
             --settings `
               "ConnectionStrings__SqlServer=${{ secrets.SQLSERVER_CONNECTIONSTRING }}" `
               "ConnectionStrings__RabbitMq=${{ secrets.RABBITMQ_CONNECTIONSTRING }}" `
-              "Jwt__SigningKey=${{ secrets.JWT_SIGNING_KEY }}" `
+              "Jwt__Issuer=GeradorDeCertificados" `
+              "Jwt__Audience=GeradorDeCertificadosApi" `
+              "Jwt__Key=${{ secrets.JWT_SIGNING_KEY }}" `
               "NewRelic__LicenseKey=${{ secrets.NEWRELIC_LICENSE_KEY }}" `
               "LuckyPenny__LicenseKey=${{ secrets.LUCKYPENNY_LICENSE_KEY }}"
 
