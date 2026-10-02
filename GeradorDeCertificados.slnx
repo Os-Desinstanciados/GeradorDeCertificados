@@ -1,3 +1,9 @@
 <Solution>
+  <Folder Name="/tests/">
+    <Project Path="tests/GeradorDeCertificados.Teste.Unidade/GeradorDeCertificados.Teste.Unidade.csproj" />
+  </Folder>
   <Project Path="src/Api/GeradorDeCertificados.WebApi.csproj" />
+  <Project Path="src/Aplicacao/GeradorDeCertificados.Aplicacao.csproj" />
+  <Project Path="src/Dominio/GeradorDeCertificados.Dominio.csproj" />
+  <Project Path="src/Infraestrutura/GeradorDeCertificados.Infraestrutura.csproj" />
 </Solution>
