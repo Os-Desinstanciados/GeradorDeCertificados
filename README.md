@@ -202,6 +202,6 @@ O estado do lote pode ser consultado durante o processamento, permitindo acompan
 - [x] Validação do fluxo completo localmente.
 - [x] Implementação de 44 testes unitários.
 - [ ] Testes de integração.
-- [ ] Deploy em ambiente de produção.
+- [x] Deploy em ambiente de produção.
 
 **Observação:** o fluxo completo de geração foi validado localmente. A publicação em ambiente de produção ainda está pendente.
