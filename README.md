@@ -1,9 +1,8 @@
-
 # 🎓 Gerador de Certificados
 
 ![.NET](https://img.shields.io/badge/.NET-10.0-512BD4)
 ![C#](https://img.shields.io/badge/C%23-239120)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-4169E1)
+![SQL Server](https://img.shields.io/badge/SQL%20Server-EF%20Core-CC2927)
 ![RabbitMQ](https://img.shields.io/badge/RabbitMQ-MassTransit-FF6600)
 [![Academia do Programador](https://img.shields.io/badge/Academia%20do%20Programador-Fullstack%202026-6f42c1)](https://www.academiadoprogramador.net/inicio)
 
@@ -11,11 +10,11 @@ O **Gerador de Certificados** é uma API REST desenvolvida em ASP.NET Core para 
 
 O sistema permite cadastrar usuários e cursos, solicitar a geração de certificados para vários alunos e acompanhar o processamento de forma assíncrona. Os certificados são gerados individualmente em PDF e disponibilizados em um arquivo ZIP para download.
 
-A aplicação utiliza mensageria com RabbitMQ e MassTransit, persistência com PostgreSQL e autenticação baseada em JWT.
+A aplicação utiliza mensageria com RabbitMQ e MassTransit, persistência com SQL Server e autenticação baseada em JWT.
 
 ## Projeto
 
-Desenvolvido durante o curso **Fullstack 2026** da [Academia do Programador](https://www.academiadoprogramador.net/), com foco na aplicação prática de conceitos de desenvolvimento de APIs, arquitetura de software, processamento assíncrono, persistência de dados.
+Desenvolvido durante o curso **Fullstack 2026** da [Academia do Programador](https://www.academiadoprogramador.net/), com foco na aplicação prática de conceitos de desenvolvimento de APIs, arquitetura de software, processamento assíncrono e persistência de dados.
 
 ## Funcionalidades
 
@@ -53,10 +52,10 @@ Antes de executar o projeto, certifique-se de possuir as seguintes ferramentas i
 - [.NET 10.0 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 - [Git](https://git-scm.com/downloads)
-- PostgreSQL 17
+- SQL Server
 - RabbitMQ
 
-O PostgreSQL e o RabbitMQ podem ser executados em contêineres Docker.
+O RabbitMQ pode ser executado em um contêiner Docker.
 
 ### Clone o repositório
 
@@ -69,11 +68,11 @@ cd GeradorDeCertificados
 
 ### Configure o ambiente
 
-Configure a conexão com o PostgreSQL, o acesso ao RabbitMQ e as informações necessárias para autenticação JWT nas configurações da aplicação.
+Configure a conexão com o SQL Server, o acesso ao RabbitMQ e as informações necessárias para autenticação JWT nas configurações da aplicação.
 
 Não armazene senhas, chaves JWT ou outras credenciais diretamente no repositório. Para o ambiente de desenvolvimento, utilize variáveis de ambiente ou o .NET User Secrets.
 
-Certifique-se de que os serviços do PostgreSQL e do RabbitMQ estejam em execução antes de iniciar a API.
+Certifique-se de que o SQL Server e o RabbitMQ estejam disponíveis antes de iniciar a API.
 
 ### Configure o banco de dados
 
@@ -83,25 +82,28 @@ Execute o comando de atualização das migrations, informando o projeto de infra
 
 ### Testes
 
-O projeto possui testes unitários desenvolvidos com MSTest para validar as entidades e as regras de negócio da aplicação.
+O projeto possui testes automatizados desenvolvidos com MSTest para validar as entidades, regras de negócio, casos de uso da camada de aplicação e geração dos documentos PDF.
 
 | Teste | Tecnologia | Objetivo | Situação |
 |---|---|---|---|
-| Unitários | MSTest | Validar entidades e regras de negócio | Concluído |
-| Integração | MSTest + Entity Framework Core | Validar a integração com a persistência | Pendente |
+| Unitários de domínio | MSTest | Validar entidades e regras de negócio | Concluído |
+| Unitários de aplicação | MSTest + Moq | Validar os fluxos da camada de aplicação de forma isolada | Concluído |
+| Geração de PDF | MSTest + QuestPDF + PDF Pig | Validar a geração e o conteúdo dos certificados | Concluído |
 
-**Testes unitários implementados:**
+**Testes implementados:**
 
 | Classe | Quantidade |
 |---|---:|
 | Curso | 12 |
 | Certificado | 12 |
 | Gerador | 20 |
-| **Total** | **44** |
+| CertificadoPdfGenerator | 2 |
+| SolicitarGeracaoCertificadosCommandHandler | 3 |
+| **Total** | **49** |
 
-Todos os 44 testes unitários foram executados com sucesso.
+Todos os **49 testes** foram executados com sucesso.
 
-**Executar os testes unitários:**
+**Executar os testes:**
 
 ```bash
 dotnet test ./tests/GeradorDeCertificados.Teste.Unidade/GeradorDeCertificados.Teste.Unidade.csproj
@@ -123,7 +125,7 @@ dotnet run --project ./src/Api
 
 Após a inicialização, acesse o endereço exibido no terminal para utilizar a API.
 
-A documentação interativa dos endpoints está disponível por meio do Swagger no ambiente configurado para desenvolvimento.
+A documentação interativa dos endpoints está disponível por meio do Swagger.
 
 ## Tecnologias
 
@@ -131,15 +133,17 @@ A documentação interativa dos endpoints está disponível por meio do Swagger 
 - **C#** — linguagem de programação.
 - **ASP.NET Core Web API** — desenvolvimento da API REST.
 - **Entity Framework Core** — mapeamento objeto-relacional e persistência de dados.
-- **PostgreSQL 17** — banco de dados relacional.
+- **SQL Server** — banco de dados relacional.
 - **MassTransit** — abstração e integração com o sistema de mensageria.
 - **RabbitMQ** — gerenciamento das filas e mensagens.
 - **MediatR** — organização e execução dos casos de uso.
 - **JWT** — autenticação baseada em tokens.
 - **Swagger** — documentação e testes interativos dos endpoints.
 - **QuestPDF** — geração dos certificados em PDF.
-- **Docker** — execução dos serviços de infraestrutura.
-- **MSTest** — testes unitários automatizados.
+- **PDF Pig** — leitura e validação dos documentos PDF nos testes.
+- **Moq** — criação de mocks para os testes unitários da camada de aplicação.
+- **Docker** — execução de serviços de infraestrutura.
+- **MSTest** — testes automatizados.
 
 ## Arquitetura
 
@@ -168,7 +172,7 @@ Responsável pela persistência e integração com os serviços externos.
 
 Inclui:
 
-- Entity Framework Core e PostgreSQL.
+- Entity Framework Core e SQL Server.
 - Implementação dos repositórios.
 - Migrations do banco de dados.
 - Geração dos documentos PDF.
@@ -200,8 +204,7 @@ O estado do lote pode ser consultado durante o processamento, permitindo acompan
 - [x] Geração de PDFs.
 - [x] Compactação e download de arquivos ZIP.
 - [x] Validação do fluxo completo localmente.
-- [x] Implementação de 44 testes unitários.
-- [ ] Testes de integração.
+- [x] Implementação de 49 testes automatizados.
+- [x] Testes unitários da camada de aplicação.
+- [x] Testes de geração e validação de PDFs.
 - [x] Deploy em ambiente de produção.
-
-**Observação:** o fluxo completo de geração foi validado localmente. A publicação em ambiente de produção ainda está pendente.
