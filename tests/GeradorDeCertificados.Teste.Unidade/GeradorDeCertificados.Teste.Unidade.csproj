@@ -8,11 +8,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Moq" Version="4.21.0" />
     <PackageReference Include="MSTest" Version="4.0.2" />
+    <PackageReference Include="PdfPig" Version="0.1.16" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Dominio\GeradorDeCertificados.Dominio.csproj" />
+    <ProjectReference Include="..\..\src\Aplicacao\GeradorDeCertificados.Aplicacao.csproj" />
+    <ProjectReference Include="..\..\src\Infraestrutura\GeradorDeCertificados.Infraestrutura.csproj" />
   </ItemGroup>
 
   <ItemGroup>
