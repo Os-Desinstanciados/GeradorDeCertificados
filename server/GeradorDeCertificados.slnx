@@ -1,6 +1,6 @@
 <Solution>
   <Folder Name="/tests/">
-    <Project Path="tests/GeradorDeCertificados.Teste.Unidade/GeradorDeCertificados.Teste.Unidade.csproj" />
+    <Project Path="../tests/GeradorDeCertificados.Teste.Unidade/GeradorDeCertificados.Teste.Unidade.csproj" />
   </Folder>
   <Project Path="src/Api/GeradorDeCertificados.WebApi.csproj" />
   <Project Path="src/Aplicacao/GeradorDeCertificados.Aplicacao.csproj" />
