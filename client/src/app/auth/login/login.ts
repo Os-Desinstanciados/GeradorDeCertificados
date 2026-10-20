@@ -2,8 +2,9 @@ import { afterNextRender, Component, ElementRef, inject, signal, viewChild } fro
 import { Router, RouterLink } from '@angular/router';
 import { LucideArrowRight } from '@lucide/angular';
 import { AuthShell } from '../shell/auth-shell';
-import { CadastroConcluidoNavigationState } from '../auth.models';
+import { CadastroConcluidoNavigationState, LoginRequest } from '../auth.models';
 import { form, required, email, minLength, pattern, FormField } from '@angular/forms/signals';
+import { AuthService } from '../auth.service';
 
 interface LoginFormModel {
   readonly email: string;
@@ -15,6 +16,7 @@ interface LoginFormModel {
   templateUrl: './login.html',
 })
 export class Login {
+  private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly tituloPagina = viewChild<ElementRef<HTMLHeadElement>>('tituloPagina');
 
@@ -39,5 +41,23 @@ export class Login {
         senha: original.senha,
       }));
     }
+  }
+
+  protected enviarFormulario(event: SubmitEvent): void {
+    event.preventDefault();
+
+    if (this.formularioLogin().invalid()) {
+      this.formularioLogin().markAsTouched();
+      return;
+    }
+
+    const requisicao: LoginRequest = {
+      email: this.modeloFormulario().email,
+      senha: this.modeloFormulario().senha,
+    };
+
+    this.authService.login(requisicao).subscribe(()=> {
+      void this.router.navigateByUrl('/');
+    });
   }
 }
