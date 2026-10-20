@@ -19,9 +19,7 @@
 
   <form novalidate class="space-y-5">
     <div>
-      <label for="login-email" class="mb-2 block text-sm font-medium text-slate-800"
-        >Email</label
-      >
+      <label for="login-email" class="mb-2 block text-sm font-medium text-slate-800">Email</label>
 
       <input
         id="login-email"
@@ -30,9 +28,20 @@
         inputmode="email"
         class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 hover:border-slate-400 focus:border-indigo-600 focus:ring-4 focus:ring-indigo-600/15 aria-[invalid=true]:border-rose-600"
         placeholder="voce@exemplo.com"
+        [formField]="formularioLogin.email"
+        [attr.aria-invalid]="formularioLogin.email().touched() && formularioLogin.email().invalid()"
+        [attr.aria-describedby]="
+          formularioLogin.email().touched() && formularioLogin.email().invalid()
+            ? 'login-email-erro'
+            : null
+        "
       />
 
-      <p id="cadastro-email-erro" class="mt-1 text-sm text-rose-700">Erro de validação</p>
+      @if (formularioLogin.email().touched() && formularioLogin.email().invalid()) {
+        <p id="login-email-erro" class="mt-1 text-sm text-rose-700">
+          {{ formularioLogin.email().errors()[0].message }}
+        </p>
+      }
     </div>
 
     <div>
@@ -48,8 +57,18 @@
         autocomplete="password"
         class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 hover:border-slate-400 focus:border-indigo-600 focus:ring-4 focus:ring-indigo-600/15 aria-[invalid=true]:border-rose-600"
         placeholder="Sua senha"
+        [attr.aria-invalid]="formularioLogin.senha().touched() && formularioLogin.senha().invalid()"
+        [attr.aria-describedby]="
+          formularioLogin.senha().touched() && formularioLogin.senha().invalid()
+            ? 'login-senha-erro'
+            : null
+        "
       />
-      <p id="cadastro-senha-erro" class="mt-1 text-sm text-rose-700">Erro de validação</p>
+      @if (formularioLogin.senha().touched() && formularioLogin.senha().invalid()) {
+        <p id="login-senha-erro" class="mt-1 text-sm text-rose-700">
+          {{ formularioLogin.senha().errors()[0].message }}
+        </p>
+      }
     </div>
 
     <button

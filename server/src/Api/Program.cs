@@ -10,7 +10,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
 
+const string corsPolicyClient = "Client";
+
 var builder = WebApplication.CreateBuilder(args);
+
+var origensPermitidas = builder.Configuration
+    .GetSection("Cors:AllowedOrigins")
+    .Get<string[]>() ?? [];
 
 // Configuração de opções de serviços
 builder.Services
@@ -104,6 +110,15 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+builder.Services.AddCors(options => options.AddPolicy(corsPolicyClient, policy =>
+{
+    if (origensPermitidas.Length > 0)
+        policy.WithOrigins(origensPermitidas);
+
+    policy.AllowAnyHeader()
+        .AllowAnyHeader();
+}));
+
 var app = builder.Build();
 
 // Habilita Swagger também em produção
@@ -132,6 +147,8 @@ app.UseExceptionHandler();
 app.UseStatusCodePages();
 
 app.UseHttpsRedirection();
+
+app.UseCors(corsPolicyClient);
 
 app.UseAuthentication();
 app.UseAuthorization();

@@ -1,11 +1,43 @@
-import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { afterNextRender, Component, ElementRef, inject, signal, viewChild } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { LucideArrowRight } from '@lucide/angular';
 import { AuthShell } from '../shell/auth-shell';
+import { CadastroConcluidoNavigationState } from '../auth.models';
+import { form, required, email, minLength, pattern, FormField } from '@angular/forms/signals';
 
+interface LoginFormModel {
+  readonly email: string;
+  readonly senha: string;
+}
 @Component({
-  imports: [AuthShell, LucideArrowRight, RouterLink, AuthShell],
+  imports: [AuthShell, LucideArrowRight, FormField, RouterLink],
   selector: 'app-login',
   templateUrl: './login.html',
 })
-export class Login {}
+export class Login {
+  private readonly router = inject(Router);
+  private readonly tituloPagina = viewChild<ElementRef<HTMLHeadElement>>('tituloPagina');
+
+  protected readonly modeloFormulario = signal<LoginFormModel>({ email: '', senha: '' });
+
+  protected readonly formularioLogin = form(this.modeloFormulario, (modelo) => {
+    required(modelo.email, { message: 'Informe seu email.' });
+    email(modelo.email, { message: 'Informe um email válido.' });
+    required(modelo.senha, { message: 'Informe sua senha.' });
+    minLength(modelo.senha, 8, { message: 'A senha precisa ter pelo menos 8 caracteres.' });
+  });
+
+  constructor() {
+    afterNextRender(() => this.tituloPagina()?.nativeElement.focus());
+
+    const estadoNavegacao = this.router.currentNavigation()?.extras.state as
+      CadastroConcluidoNavigationState | undefined;
+
+    if (estadoNavegacao?.emailCadastrado) {
+      this.modeloFormulario.update((original) => ({
+        email: estadoNavegacao?.emailCadastrado ?? '',
+        senha: original.senha,
+      }));
+    }
+  }
+}

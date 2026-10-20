@@ -1,9 +1,10 @@
-import { afterNextRender, Component, ElementRef, model, signal, viewChild } from '@angular/core';
+import { afterNextRender, Component, ElementRef, inject, model, signal, viewChild } from '@angular/core';
 import { AuthShell } from '../shell/auth-shell';
 import { LucideArrowRight } from '@lucide/angular';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { email, form, FormField, minLength, pattern, required } from '@angular/forms/signals';
-import { CadastroRequest } from '../auth.models';
+import { CadastroConcluidoNavigationState, CadastroRequest } from '../auth.models';
+import { AuthService } from '../auth.service';
 
 interface CadastroFormModel {
   readonly email: string;
@@ -16,6 +17,9 @@ interface CadastroFormModel {
   templateUrl: './cadastro.html',
 })
 export class Cadastro {
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+
   private readonly tituloPagina = viewChild<ElementRef<HTMLHRElement>>('tituloPagina');
 
   protected readonly modeloFormulario = signal<CadastroFormModel>({ email: '', senha: '' });
@@ -30,7 +34,7 @@ export class Cadastro {
       message: 'Inclua pelo menos um número e um caractere especial.',
     });
   });
-  
+
   constructor() {
     afterNextRender(() => this.tituloPagina()?.nativeElement.focus());
   }
@@ -42,5 +46,13 @@ export class Cadastro {
       email: this.modeloFormulario().email,
       senha: this.modeloFormulario().senha,
     };
+
+    this.authService.cadastrar(request).subscribe(usuario => {
+      const estadoNavegacao: CadastroConcluidoNavigationState = {
+        emailCadastrado: usuario.email
+      };
+
+      void this.router.navigateByUrl('/login', {state: estadoNavegacao});
+    });
   }
 }
