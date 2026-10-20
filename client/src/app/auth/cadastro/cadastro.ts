@@ -1,5 +1,5 @@
 import { afterNextRender, Component, ElementRef, model, signal, viewChild } from '@angular/core';
-import { PaginaAutenticacao } from '../pagina-autenticacao';
+import { AuthShell } from '../shell/auth-shell';
 import { LucideArrowRight } from '@lucide/angular';
 import { RouterLink } from '@angular/router';
 import { email, form, FormField, minLength, pattern, required } from '@angular/forms/signals';
@@ -11,7 +11,7 @@ interface CadastroFormModel {
 }
 
 @Component({
-  imports: [PaginaAutenticacao, LucideArrowRight, FormField, RouterLink],
+  imports: [AuthShell, LucideArrowRight, FormField, RouterLink, AuthShell],
   selector: 'app-cadastro',
   templateUrl: './cadastro.html',
 })
