@@ -54,7 +54,7 @@ export class Cadastro {
 
     this.authService.cadastrar(request).subscribe(usuario => {
       const estadoNavegacao: CadastroConcluidoNavigationState = {
-        emailCadastrado: usuario.email
+        emailCadastrado: request.email
       };
 
       void this.router.navigateByUrl('/login', {state: estadoNavegacao});
