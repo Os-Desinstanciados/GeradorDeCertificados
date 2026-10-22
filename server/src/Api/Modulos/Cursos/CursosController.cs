@@ -11,6 +11,23 @@ public sealed class CursosController(
     IMediator mediator
 ) : ControllerBase
 {
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> Listar(
+        CancellationToken cancellationToken
+    )
+    {
+        var resultado = await mediator.Send(
+            new ListarCursosQuery(),
+            cancellationToken
+        );
+
+        if (resultado.IsFailed)
+            return this.ProblemDetails(resultado);
+
+        return Ok(resultado.Value);
+    }
+
     [HttpGet("{cursoId:guid}")]
     [ProducesResponseType<CursoResponse>(StatusCodes.Status200OK)]
     public async Task<ActionResult<CursoResponse>> ObterPorId(

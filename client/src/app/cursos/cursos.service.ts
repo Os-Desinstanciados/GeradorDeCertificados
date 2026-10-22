@@ -12,14 +12,14 @@ export class CursosService {
   private readonly urlApi = inject(URL_API);
 
   listar(): Observable<readonly CursoDto[]> {
-    return this.http.get<readonly CursoDto[]>(`${this.urlApi}/cursos`);
+    return this.http.get<readonly CursoDto[]>(`${this.urlApi}/api/cursos`);
   }
 
   cadastrar(requisicao: CriarCursoRequest): Observable<CursoDto> {
-    return this.http.post<CursoDto>(`${this.urlApi}/cursos`, requisicao);
+    return this.http.post<CursoDto>(`${this.urlApi}/api/cursos`, requisicao);
   }
 
   obterPorId(cursoId: string): Observable<CursoDto> {
-    return this.http.get<CursoDto>(`${this.urlApi}/cursos/${cursoId}`);
+    return this.http.get<CursoDto>(`${this.urlApi}/api/cursos/${cursoId}`);
   }
 }
