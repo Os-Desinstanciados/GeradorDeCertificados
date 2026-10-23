@@ -41,8 +41,9 @@ export class CertificadosCurso {
     required(modelo.nomesAlunos, { message: 'Informe ao menos um nome de aluno.' });
   });
 
-  protected readonly status = signal<StatusProcessamentoDto | null>(null);
+ 
   protected readonly certificados = signal<readonly CertificadoDto[]>([]);
+  protected readonly status = signal<StatusProcessamentoDto | null>(null);
 
   constructor() {
     this.cursosService.obterPorId(this.cursoId).subscribe({

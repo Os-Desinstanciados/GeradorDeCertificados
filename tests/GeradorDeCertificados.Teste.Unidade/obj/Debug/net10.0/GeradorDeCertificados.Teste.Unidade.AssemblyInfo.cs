@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GeradorDeCertificados.Teste.Unidade")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+53c5b11c487c716061e4d6d1ed7f8023b2236067")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d821b826b9e649e080e90abd1eedfe2bd1ac158f")]
 [assembly: System.Reflection.AssemblyProductAttribute("GeradorDeCertificados.Teste.Unidade")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GeradorDeCertificados.Teste.Unidade")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

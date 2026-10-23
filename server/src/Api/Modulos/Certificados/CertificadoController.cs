@@ -55,11 +55,19 @@ public sealed class CertificadosController(
         if (resultado.IsFailed)
             return this.ProblemDetails(resultado);
 
+
         return Ok(new StatusGeradorResponse(
             resultado.Value.GeradorId,
             resultado.Value.CursoId,
-            resultado.Value.Status
+            resultado.Value.Status,
+            resultado.Value.TotalCertificados,
+            resultado.Value.Gerados,
+            resultado.Value.Falhas,
+            resultado.Value.ZipDisponivel,
+            resultado.Value.IniciadoEm,
+            resultado.Value.ConcluidoEm
         ));
+
     }
 
     [HttpGet("certificados")]

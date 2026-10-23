@@ -23,9 +23,10 @@ export interface StatusProcessamentoDto {
   readonly concluidoEm: string | null;
 }
 
+
 export interface CertificadoDto {
   readonly id: string;
   readonly nomeAluno: string;
   readonly statusGeracao: string;
-  readonly geradoEm: string | null;
+  readonly dataGeracao: string | null;
 }

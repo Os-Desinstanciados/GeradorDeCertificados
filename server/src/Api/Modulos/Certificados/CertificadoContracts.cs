@@ -16,12 +16,18 @@ public sealed record GerarCertificadosResponse(
 public sealed record StatusGeradorResponse(
     Guid GeradorId,
     Guid CursoId,
-    StatusGerador Status
+    StatusGerador Status,
+    int TotalCertificados,
+    int Gerados,
+    int Falhas,
+    bool ZipDisponivel,
+    DateTime IniciadoEm,
+    DateTime? ConcluidoEm
 );
 
 public sealed record CertificadoResponse(
     Guid Id,
     string NomeAluno,
-    DateTime? DataGeracao,
-    StatusCertificado Status
+    DateTime? GeradoEm,
+    StatusCertificado StatusGeracao
 );

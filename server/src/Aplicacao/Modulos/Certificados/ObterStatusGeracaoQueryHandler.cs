@@ -41,10 +41,18 @@ public sealed class ObterStatusGeracaoQueryHandler(
             return Result.Fail(ErrosCertificado.GeracaoNaoEncontrada(query.CursoId));
         }
 
+
         return Result.Ok(new StatusGeracaoDto(
             gerador.Id,
             gerador.CursoId,
-            gerador.Status
+            gerador.Status,
+            gerador.Certificados.Count,
+            gerador.Gerados,
+            gerador.Falhas,
+            gerador.CaminhoZip is not null,
+            gerador.DataSolicitacao,
+            gerador.ConcluidoEm
         ));
+
     }
 }
