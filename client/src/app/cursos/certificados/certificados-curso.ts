@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { form, FormField, required } from '@angular/forms/signals';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { LucideArrowLeft, LucideFileText, LucideFolderArchive } from '@lucide/angular';
@@ -13,6 +13,8 @@ import {
   StatusProcessamentoDto,
 } from './certificados.models';
 import { CertificadosService } from './certificados.service';
+import { exhaustMap, interval, Subscription } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 interface CertificadosFormModel {
   readonly nomesAlunos: string;
@@ -27,6 +29,9 @@ export class CertificadosCurso {
   private readonly route = inject(ActivatedRoute);
   private readonly cursosService = inject(CursosService);
   private readonly certificadosService = inject(CertificadosService);
+  private readonly destroyRef = inject(DestroyRef);
+
+  private consultaStatus?: Subscription;
 
   protected readonly cursoId = this.route.snapshot.paramMap.get('cursoId') ?? '';
   protected readonly curso = signal<CursoDto | null>(null);
@@ -41,7 +46,6 @@ export class CertificadosCurso {
     required(modelo.nomesAlunos, { message: 'Informe ao menos um nome de aluno.' });
   });
 
- 
   protected readonly certificados = signal<readonly CertificadoDto[]>([]);
   protected readonly status = signal<StatusProcessamentoDto | null>(null);
 
@@ -119,6 +123,14 @@ export class CertificadosCurso {
         this.status.set(status);
 
         this.carregarCertificados();
+
+        if (
+          status.status === 'Pendente' ||
+          status.status === 'GerandoCertificados' ||
+          status.status === 'GerandoZip'
+        )
+          this.inicializarAtualizacao();
+        else this.pararAtualizacao();
       },
       error: (resposta: HttpErrorResponse) => {
         this.status.set(null);
@@ -146,6 +158,40 @@ export class CertificadosCurso {
         );
       },
     });
+  }
+
+  private inicializarAtualizacao(): void {
+    if (this.consultaStatus && !this.consultaStatus.closed) return;
+
+    this.consultaStatus = interval(5000)
+      .pipe(
+        exhaustMap(() => this.certificadosService.obterStatus(this.cursoId)),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe({
+        next: (status) => {
+          this.status.set(status);
+          this.carregarCertificados();
+
+          if (status.status !== 'Pendente' && status.status !== 'GerandoCertificados')
+            this.pararAtualizacao();
+        },
+        error: (resposta: HttpErrorResponse) => {
+          this.mensagemErro.set(
+            this.obterMensagemErroApi(
+              resposta,
+              'Não foi possível atualizar o processamento dos certificados do curso.',
+            ),
+          );
+
+          this.pararAtualizacao();
+        },
+      });
+  }
+
+  private pararAtualizacao(): void {
+    this.consultaStatus?.unsubscribe();
+    this.consultaStatus = undefined;
   }
 
   private obterMensagemErroApi(resposta: HttpErrorResponse, mensagemPadrao: string): string {

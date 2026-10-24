@@ -8,10 +8,14 @@ public sealed record GerarCertificadosRequest(
 
 public sealed record AlunoRequest(string Nome);
 
+
 public sealed record GerarCertificadosResponse(
     Guid GeradorId,
+    Guid CursoId,
+    int TotalAlunos,
     StatusGerador Status
 );
+
 
 public sealed record StatusGeradorResponse(
     Guid GeradorId,

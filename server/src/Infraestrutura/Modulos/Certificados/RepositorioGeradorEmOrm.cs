@@ -53,7 +53,7 @@ public sealed class RepositorioGeradorEmOrm
             .AsNoTracking()
             .Include(p => p.Certificados)
             .Where(p => p.CursoId == cursoId)
-            .OrderByDescending(p => p.Id)
+            .OrderByDescending(p => p.DataSolicitacao)
             .FirstOrDefaultAsync(cancellationToken);
     }
 

@@ -35,6 +35,8 @@ public sealed class CertificadosController(
             new { cursoId },
             new GerarCertificadosResponse(
                 resultado.Value.Id,
+                cursoId,
+                request.Alunos?.Count ?? 0,
                 resultado.Value.Status
             )
         );
