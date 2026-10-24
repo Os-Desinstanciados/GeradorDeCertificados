@@ -36,4 +36,10 @@ export class CertificadosService {
       `${this.urlApi}/api/cursos/${cursoId}/certificados`,
     );
   }
+
+  baixar(cursoId: string): Observable<Blob> {
+    return this.http.get(`${this.urlApi}/api/cursos/${cursoId}/certificados/download`, {
+      responseType: 'blob'
+    });
+  }
 }
