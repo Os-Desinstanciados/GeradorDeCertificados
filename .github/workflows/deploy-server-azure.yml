@@ -27,10 +27,10 @@ jobs:
           dotnet-version: '10.x'
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: dotnet build server --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o "${{env.DOTNET_ROOT}}/myapp"
+        run: dotnet publish server -c Release -o "${{env.DOTNET_ROOT}}/myapp"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -55,6 +55,9 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore server/src/Api/GeradorDeCertificados.WebApi.csproj
 
+      - name: Install Entity Framework CLI
+        run: dotnet tool install --global dotnet-ef
+
       - name: Restore tools
         run: dotnet tool restore --tool-manifest server/dotnet-tools.json
 
@@ -64,8 +67,8 @@ jobs:
           NewRelic__LicenseKey: ${{ secrets.NEWRELIC_LICENSE_KEY }}
         run: |
           dotnet ef database update `
-            --project server/src/Infraestrutura/GeradorDeCertificados.Infraestrutura.csproj `
-            --startup-project server/src/Api/GeradorDeCertificados.WebApi.csproj `
+            --project "server/src/Infraestrutura/GeradorDeCertificados.Infraestrutura.csproj" `
+            --startup-project "server/src/Api/GeradorDeCertificados.WebApi.csproj" `
             --configuration Release `
             --connection "$env:SQLSERVER_CONNECTIONSTRING"
 
