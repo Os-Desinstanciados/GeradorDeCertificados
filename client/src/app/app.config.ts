@@ -5,6 +5,7 @@ import { provideRouter, Routes } from '@angular/router';
 import { environment } from '../environments/environment';
 import { authInterceptor } from './auth/auth.interceptor';
 import { CHAVE_ARMAZENAMENTO, URL_API } from './auth/auth.tokens';
+import { isAnonymousdGuard, isAuthenticatedGuard } from './auth/auth.guards';
 
 const routes: Routes = [
   {
@@ -13,6 +14,8 @@ const routes: Routes = [
   },
   {
     path: 'auth',
+    canActivate: [isAnonymousdGuard],
+    canActivateChild:[isAnonymousdGuard],
     loadComponent: () => import('./auth/shell/auth-shell').then((c) => c.AuthShell),
     children: [
       {
@@ -27,6 +30,8 @@ const routes: Routes = [
   },
   {
     path: 'cursos',
+    canActivate: [isAuthenticatedGuard],
+    canActivateChild: [isAuthenticatedGuard],
     loadComponent: () => import('./cursos/shell/cursos-shell').then((c) => c.CursosShell),
     children: [
       { path: '', redirectTo: 'listar', pathMatch: 'full' },
