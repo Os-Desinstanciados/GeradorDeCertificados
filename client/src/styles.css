@@ -1,0 +1,37 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import 'tailwindcss';
+
+@theme {
+  --color-brand: #4338ca;
+  --color-brand-hover: #3730a3;
+  --color-brand-strong: #4338ca;
+
+  --color-on-dark: #ffffff;
+
+  --color-surface: #ffffff;
+  --color-surface-muted: #f1f5f9;
+  --color-surface-subtle: #f8fafc;
+
+  --color-border: #e2e8f0;
+  --color-border-strong: #cbd5e1;
+
+  --color-text: #334155;
+  --color-text-strong: #0f172a;
+  --color-text-muted: #64748b;
+  --color-text-subtle: #475569;
+  --color-text-faint: #64748b;
+  --color-text-label: #334155;
+
+  --color-danger: #e11d48;
+  --color-danger-text: #be123c;
+  --color-danger-strong: #881337;
+  --color-danger-border: #fecdd3;
+  --color-danger-subtle: #fff1f2;
+
+  --color-success: #16a34a;
+  --color-success-text: #15803d;
+  --color-success-strong: #166534;
+  --color-success-border: #bbf7d0;
+  --color-success-subtle: #f0fdf4;
+}

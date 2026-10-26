@@ -1,0 +1,45 @@
+@if (mensagemErro()) {
+  <div
+    class="mb-6 rounded-xl border border-danger-border bg-danger-subtle px-4 py-3 text-sm text-danger-strong"
+    role="alert"
+  >
+    {{ mensagemErro() }}
+  </div>
+}
+
+@if (carregando()) {
+  <p class="rounded-2xl border border-border bg-surface p-6 text-text-muted" role="status">
+    Carregando curso...
+  </p>
+} @else if (curso(); as curso) {
+  <dl
+    class="grid gap-5 rounded-2xl border border-border bg-surface p-6 shadow-sm sm:grid-cols-2 sm:p-8"
+  >
+    <div class="sm:col-span-2 flex flex-wrap items-center justify-between gap-4">
+      <div>
+        <dt class="text-sm font-medium text-text-faint">Nome</dt>
+        <dd class="mt-1 wrap-break-word text-xl font-semibold text-text-strong">
+          {{ curso.nome }}
+        </dd>
+      </div>
+
+      <div class="flex gap-2">
+        <a
+          [routerLink]="['/cursos', curso.id, 'certificados']"
+          class="inline-flex flex-wrap items-center gap-2 rounded-xl bg-brand px-5 py-3 text-sm font-semibold text-on-dark hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+        >
+          <svg lucideFileText class="size-4"></svg>
+          Gerenciar certificados</a
+        >
+      </div>
+    </div>
+    <div>
+      <dt class="text-sm font-medium text-text-faint">Carga horária</dt>
+      <dd class="mt-1 text-text">{{ curso.cargaHoraria }} horas</dd>
+    </div>
+    <div>
+      <dt class="text-sm font-medium text-text-faint">Data de conclusão</dt>
+      <dd class="mt-1 text-text">{{ formatarData(curso.dataConclusao) }}</dd>
+    </div>
+  </dl>
+}
