@@ -116,7 +116,7 @@ builder.Services.AddCors(options => options.AddPolicy(corsPolicyClient, policy =
         policy.WithOrigins(origensPermitidas);
 
     policy.AllowAnyHeader()
-        .AllowAnyHeader();
+        .AllowAnyMethod();
 }));
 
 var app = builder.Build();
